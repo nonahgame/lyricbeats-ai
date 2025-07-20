@@ -1,9 +1,0 @@
-lyricbeats-ai/
-├── backend/
-│   ├── app.py
-│   ├── requirements.txt
-├── frontend/
-│   ├── src/
-│   ├── package.json
-├── render.yaml  ✅ <== THIS MUST BE HERE
-└── README.md
