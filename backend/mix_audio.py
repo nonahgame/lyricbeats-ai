@@ -1,6 +1,6 @@
 # placeholder for audio mixing
 #File: backend/mix_audio.py
-from pydub import AudioSegment
+from pydub import AudioSegment, pyaudioop as audioop
 
 def mix_tracks(music_path, voice_path, output_path):
   music = AudioSegment.from_file(music_path)
