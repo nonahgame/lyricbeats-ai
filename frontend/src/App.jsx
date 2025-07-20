@@ -1,6 +1,3 @@
-# placeholder: already provided
-# File: frontend/src/App-jsx
-
 import React, { useState } from 'react';
 import axios from 'axios';
 
