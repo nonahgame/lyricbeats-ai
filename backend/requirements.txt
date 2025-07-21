@@ -2,4 +2,5 @@ Flask
 Flask-Cors
 pydub
 gunicorn
-# pyaudioop
+pipwin
+pipwin install pyaudio
