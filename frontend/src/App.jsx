@@ -1,15 +1,17 @@
 // File: frontend/src/App.jsx
+
 import React, { useState } from 'react';
 import axios from 'axios';
 
 function App() {
-  const [lyrics, setLyrics] = useState("");
-  const [genre, setGenre] = useState("pop");
-  const [voice, setVoice] = useState("female");
+  const [lyrics, setLyrics] = useState('');
+  const [genre, setGenre] = useState('pop');
+  const [voice, setVoice] = useState('female');
   const [trackUrl, setTrackUrl] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const API_URL = "https://lyricbeats.onrender.com"; // Update to your deployed backend
+  // ✅ Your backend URL on Render
+  const API_URL = 'https://lyricbeats.onrender.com';
 
   const handleGenerate = async () => {
     if (!lyrics.trim()) return;
@@ -22,17 +24,16 @@ function App() {
       });
       setTrackUrl(`${API_URL}${res.data.url}`);
     } catch (err) {
-      alert('Generation failed');
+      console.error('Generation failed:', err.message);
+      alert('Generation failed. Check server logs or input.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="p-6 max-w-2xl mx-auto">
-      <h1 className="text-3xl font-bold mb-4">
-        🎶 LyricBeats AI Music Generator
-      </h1>
+    <div className="max-w-2xl mx-auto mt-10 px-4">
+      <h1 className="text-3xl font-bold mb-4 text-center">🎶 LyricBeats AI</h1>
 
       <textarea
         className="w-full h-40 p-2 border border-gray-300 rounded"
@@ -43,11 +44,11 @@ function App() {
       />
 
       <div className="mt-4">
-        <label>Genre:</label>
+        <label className="font-semibold">Genre:</label>
         <select
           value={genre}
           onChange={(e) => setGenre(e.target.value)}
-          className="ml-2 border p-1"
+          className="ml-2 border p-1 rounded"
         >
           <option value="pop">Pop</option>
           <option value="hiphop">Hip Hop</option>
@@ -55,11 +56,11 @@ function App() {
           <option value="edm">EDM</option>
         </select>
 
-        <label className="ml-4">Voice:</label>
+        <label className="ml-4 font-semibold">Voice:</label>
         <select
           value={voice}
           onChange={(e) => setVoice(e.target.value)}
-          className="ml-2 border p-1"
+          className="ml-2 border p-1 rounded"
         >
           <option value="female">Female</option>
           <option value="male">Male</option>
@@ -68,7 +69,7 @@ function App() {
 
       <button
         onClick={handleGenerate}
-        className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        className="mt-6 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
         disabled={loading}
       >
         {loading ? 'Generating...' : 'Generate Music'}
