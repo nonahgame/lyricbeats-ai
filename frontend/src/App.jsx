@@ -4,6 +4,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
+"dependencies": {
+  "serve": "^14.2.0",
+  ...
+}
 function App() {
 const [lyrics, setLyrics] = useState("");
 const [genre, setGenre] = useState("pop");
