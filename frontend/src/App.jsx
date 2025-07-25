@@ -4,16 +4,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-"dependencies": {
-  "serve": "^14.2.0",
-  ...
-}
 function App() {
 const [lyrics, setLyrics] = useState("");
 const [genre, setGenre] = useState("pop");
 const [voice, setVoice] = useState("female");
 const [trackUrl, setTrackUrl] = useState(null);
 const [loading, setLoading] = useState(false);
+const API_URL = "https://lyricbeats.onrender.com";
 
 const handleGenerate = async () => {
 if (!lyrics.trim()) return;
