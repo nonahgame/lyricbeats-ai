@@ -1,75 +1,87 @@
-// placeholder for frontend App.jsx code
-// #------------------ FRONTEND ------------------
-// #File: frontend/src/App.jsx
+// File: frontend/src/App.jsx
 import React, { useState } from 'react';
 import axios from 'axios';
 
 function App() {
-const [lyrics, setLyrics] = useState("");
-const [genre, setGenre] = useState("pop");
-const [voice, setVoice] = useState("female");
-const [trackUrl, setTrackUrl] = useState(null);
-const [loading, setLoading] = useState(false);
-const API_URL = "https://lyricbeats.onrender.com";
+  const [lyrics, setLyrics] = useState("");
+  const [genre, setGenre] = useState("pop");
+  const [voice, setVoice] = useState("female");
+  const [trackUrl, setTrackUrl] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-const handleGenerate = async () => {
-if (!lyrics.trim()) return;
-setLoading(true);
-try {
-const res = await axios.post('http://localhost:5000/generate', {
-lyrics,
-genre,
-voice,
-});
-setTrackUrl('http://localhost:5000' + res.data.url);
-} catch (err) {
-alert('Generation failed');
-} finally {
-setLoading(false);
-}
-};
+  const API_URL = "https://lyricbeats.onrender.com"; // Update to your deployed backend
 
-return (
+  const handleGenerate = async () => {
+    if (!lyrics.trim()) return;
+    setLoading(true);
+    try {
+      const res = await axios.post(`${API_URL}/generate`, {
+        lyrics,
+        genre,
+        voice,
+      });
+      setTrackUrl(`${API_URL}${res.data.url}`);
+    } catch (err) {
+      alert('Generation failed');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-🎶 LyricBeats AI
-<textarea
-className="w-full h-40 p-2 border border-gray-300 rounded"
-maxLength={3000}
-value={lyrics}
-onChange={(e) => setLyrics(e.target.value)}
-placeholder="Enter your lyrics here (max 3000 characters)"
-/>
+  return (
+    <div className="p-6 max-w-2xl mx-auto">
+      <h1 className="text-3xl font-bold mb-4">
+        🎶 LyricBeats AI Music Generator
+      </h1>
 
-Genre:
-<select value={genre} onChange={(e) => setGenre(e.target.value)} className="ml-2 border p-1">
-Pop
-Hip Hop
-R&B
-EDM
+      <textarea
+        className="w-full h-40 p-2 border border-gray-300 rounded"
+        maxLength={3000}
+        value={lyrics}
+        onChange={(e) => setLyrics(e.target.value)}
+        placeholder="Enter your lyrics here (max 3000 characters)"
+      />
 
-    <label className="ml-4">Voice:</label>
-    <select value={voice} onChange={(e) => setVoice(e.target.value)} className="ml-2 border p-1">
-      <option value="female">Female</option>
-      <option value="male">Male</option>
-    </select>
-  </div>
-  <button
-    onClick={handleGenerate}
-    className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-    disabled={loading}
-  >
-    {loading ? 'Generating...' : 'Generate Music'}
-  </button>
+      <div className="mt-4">
+        <label>Genre:</label>
+        <select
+          value={genre}
+          onChange={(e) => setGenre(e.target.value)}
+          className="ml-2 border p-1"
+        >
+          <option value="pop">Pop</option>
+          <option value="hiphop">Hip Hop</option>
+          <option value="rnb">R&B</option>
+          <option value="edm">EDM</option>
+        </select>
 
-  {trackUrl && (
-    <div className="mt-6">
-      <h2 className="text-xl font-semibold mb-2">Generated Music:</h2>
-      <audio controls src={trackUrl} className="w-full" />
+        <label className="ml-4">Voice:</label>
+        <select
+          value={voice}
+          onChange={(e) => setVoice(e.target.value)}
+          className="ml-2 border p-1"
+        >
+          <option value="female">Female</option>
+          <option value="male">Male</option>
+        </select>
+      </div>
+
+      <button
+        onClick={handleGenerate}
+        className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        disabled={loading}
+      >
+        {loading ? 'Generating...' : 'Generate Music'}
+      </button>
+
+      {trackUrl && (
+        <div className="mt-6">
+          <h2 className="text-xl font-semibold mb-2">Generated Music:</h2>
+          <audio controls src={trackUrl} className="w-full" />
+        </div>
+      )}
     </div>
-  )}
-</div>
-
-);
+  );
 }
 
 export default App;
