@@ -1,5 +1,3 @@
-// File: frontend/src/App.jsx
-
 import React, { useState } from 'react';
 import axios from 'axios';
 
@@ -9,13 +7,22 @@ function App() {
   const [voice, setVoice] = useState('female');
   const [trackUrl, setTrackUrl] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  // ✅ Your backend URL on Render
   const API_URL = 'https://lyricbeats.onrender.com';
 
   const handleGenerate = async () => {
-    if (!lyrics.trim()) return;
+    if (!lyrics.trim()) {
+      setError('Please enter lyrics');
+      return;
+    }
+    if (lyrics.length > 3000) {
+      setError('Lyrics must be under 3000 characters');
+      return;
+    }
+
     setLoading(true);
+    setError(null);
     try {
       const res = await axios.post(`${API_URL}/generate`, {
         lyrics,
@@ -24,63 +31,81 @@ function App() {
       });
       setTrackUrl(`${API_URL}${res.data.url}`);
     } catch (err) {
-      console.error('Generation failed:', err.message);
-      alert('Generation failed. Check server logs or input.');
+      setError(`Generation failed: ${err.response?.data?.error || err.message}`);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="max-w-2xl mx-auto mt-10 px-4">
-      <h1 className="text-3xl font-bold mb-4 text-center">🎶 LyricBeats AI</h1>
+    <div className="max-w-3xl mx-auto mt-10 px-4 font-sans">
+      <h1 className="text-4xl font-bold mb-6 text-center text-blue-600">🎶 LyricBeats AI</h1>
+
+      {error && (
+        <div className="mb-4 p-3 bg-red-100 text-red-700 rounded">
+          {error}
+        </div>
+      )}
 
       <textarea
-        className="w-full h-40 p-2 border border-gray-300 rounded"
+        className="w-full h-48 p-4 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-800 placeholder-gray-400"
         maxLength={3000}
         value={lyrics}
         onChange={(e) => setLyrics(e.target.value)}
         placeholder="Enter your lyrics here (max 3000 characters)"
       />
 
-      <div className="mt-4">
-        <label className="font-semibold">Genre:</label>
-        <select
-          value={genre}
-          onChange={(e) => setGenre(e.target.value)}
-          className="ml-2 border p-1 rounded"
-        >
-          <option value="pop">Pop</option>
-          <option value="hiphop">Hip Hop</option>
-          <option value="rnb">R&B</option>
-          <option value="edm">EDM</option>
-        </select>
+      <div className="mt-6 flex flex-col sm:flex-row sm:items-center gap-4">
+        <div className="flex items-center">
+          <label className="font-semibold text-gray-700">Genre:</label>
+          <select
+            value={genre}
+            onChange={(e) => setGenre(e.target.value)}
+            className="ml-2 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="pop">Pop</option>
+            <option value="hiphop">Hip Hop</option>
+            <option value="rnb">R&B</option>
+            <option value="edm">EDM</option>
+          </select>
+        </div>
 
-        <label className="ml-4 font-semibold">Voice:</label>
-        <select
-          value={voice}
-          onChange={(e) => setVoice(e.target.value)}
-          className="ml-2 border p-1 rounded"
-        >
-          <option value="female">Female</option>
-          <option value="male">Male</option>
-        </select>
+        <div className="flex items-center">
+          <label className="font-semibold text-gray-700">Voice:</label>
+          <select
+            value={voice}
+            onChange={(e) => setVoice(e.target.value)}
+            className="ml-2 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="female">Female</option>
+            <option value="male">Male</option>
+          </select>
+        </div>
       </div>
 
       <button
         onClick={handleGenerate}
-        className="mt-6 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        className="mt-6 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-blue-300 transition-colors"
         disabled={loading}
       >
         {loading ? 'Generating...' : 'Generate Music'}
       </button>
 
       {trackUrl && (
-        <div className="mt-6">
-          <h2 className="text-xl font-semibold mb-2">Generated Music:</h2>
-          <audio controls src={trackUrl} className="w-full" />
+        <div className="mt-8">
+          <h2 className="text-2xl font-semibold mb-3 text-gray-800">Generated Music:</h2>
+          <audio
+            controls
+            src={trackUrl}
+            className="w-full"
+            onError={() => setError('Failed to load audio track')}
+          />
         </div>
       )}
+
+      <p className="mt-4 text-sm text-gray-500 text-center">
+        Character count: {lyrics.length}/3000
+      </p>
     </div>
   );
 }
