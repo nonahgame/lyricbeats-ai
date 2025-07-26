@@ -4,6 +4,6 @@ body {
   background-color: #f7fafc;
 }
 
-textarea, select, button {
+textarea, select, button, input[type="file"] {
   transition: all 0.2s ease-in-out;
 }
