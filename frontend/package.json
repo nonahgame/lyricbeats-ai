@@ -11,9 +11,9 @@
     "react-dom": "^18.2.0",
     "react-scripts": "^5.0.1",
     "serve": "^14.2.0",
-    "tailwindcss": "^3.3.3"  // # Added for better styling
+    "tailwindcss": "^3.3.3" "_comment":  "# Added for better styling"
   },
   "devDependencies": {
-    "@tailwindcss/forms": "^0.5.3"  // # For form styling
+    "@tailwindcss/forms": "^0.5.3"  "_comment": "# For form styling"
   }
 }
