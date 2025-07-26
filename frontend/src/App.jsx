@@ -3,8 +3,8 @@ import axios from 'axios';
 
 function App() {
   const [lyrics, setLyrics] = useState('');
-  const [genre, setGenre] = useState('pop');
-  const [voice, setVoice] = useState('female');
+  const [musicFile, setMusicFile] = useState(null);
+  const [voiceFile, setVoiceFile] = useState(null);
   const [trackUrl, setTrackUrl] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -20,14 +20,22 @@ function App() {
       setError('Lyrics must be under 3000 characters');
       return;
     }
+    if (!musicFile || !voiceFile) {
+      setError('Please upload both music and voice files');
+      return;
+    }
 
     setLoading(true);
     setError(null);
+
+    const formData = new FormData();
+    formData.append('lyrics', lyrics);
+    formData.append('music_file', musicFile);
+    formData.append('voice_file', voiceFile);
+
     try {
-      const res = await axios.post(`${API_URL}/generate`, {
-        lyrics,
-        genre,
-        voice,
+      const res = await axios.post(`${API_URL}/generate`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
       });
       setTrackUrl(`${API_URL}${res.data.url}`);
     } catch (err) {
@@ -55,31 +63,25 @@ function App() {
         placeholder="Enter your lyrics here (max 3000 characters)"
       />
 
-      <div className="mt-6 flex flex-col sm:flex-row sm:items-center gap-4">
-        <div className="flex items-center">
-          <label className="font-semibold text-gray-700">Genre:</label>
-          <select
-            value={genre}
-            onChange={(e) => setGenre(e.target.value)}
-            className="ml-2 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="pop">Pop</option>
-            <option value="hiphop">Hip Hop</option>
-            <option value="rnb">R&B</option>
-            <option value="edm">EDM</option>
-          </select>
+      <div className="mt-6 flex flex-col gap-4">
+        <div>
+          <label className="font-semibold text-gray-700 block mb-1">Upload Music (WAV):</label>
+          <input
+            type="file"
+            accept="audio/wav"
+            onChange={(e) => setMusicFile(e.target.files[0])}
+            className="w-full p-2 border border-gray-300 rounded-lg"
+          />
         </div>
 
-        <div className="flex items-center">
-          <label className="font-semibold text-gray-700">Voice:</label>
-          <select
-            value={voice}
-            onChange={(e) => setVoice(e.target.value)}
-            className="ml-2 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="female">Female</option>
-            <option value="male">Male</option>
-          </select>
+        <div>
+          <label className="font-semibold text-gray-700 block mb-1">Upload Voice (WAV):</label>
+          <input
+            type="file"
+            accept="audio/wav"
+            onChange={(e) => setVoiceFile(e.target.files[0])}
+            className="w-full p-2 border border-gray-300 rounded-lg"
+          />
         </div>
       </div>
 
