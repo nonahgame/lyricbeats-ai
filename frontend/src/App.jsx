@@ -42,7 +42,7 @@ function App() {
       <h1 className="text-4xl font-bold mb-6 text-center text-blue-600">🎶 LyricBeats AI</h1>
 
       {error && (
-        <div className="mb-4 p-3 bg-red-100 text-red-700 rounded">
+        <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg">
           {error}
         </div>
       )}
@@ -98,7 +98,7 @@ function App() {
             controls
             src={trackUrl}
             className="w-full"
-            onError={() => setError('Failed to load audio track')}
+            onError={() => setError('Failed to load audio track. Please try again.')}
           />
         </div>
       )}
